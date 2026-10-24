@@ -1,0 +1,478 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Project 33: Automated ETL Excel Log to SQL</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Rancangan project portofolio Data Analyst: pipeline ETL otomatis yang merapikan log Excel operator lini perakitan smartphone, memvalidasi, dan memuatnya ke database SQL.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: tema terang ala Google (single theme, sengaja): latar putih keabuan, kartu putih;
+   biru = struktur, kuning = penanda utama, hijau = info pendukung, merah = aksen.
+   Skala huruf: H1 32 · H2 25 · H3 19 · body 16.5 · keterangan 14 · label 12.5 */
+:root{color-scheme:light;
+--bg:#F8F9FA;--card:#FFFFFF;--sub:#F1F3F4;--line:#DADCE0;
+--ink:#202124;--head:#174EA6;--mut:#5F6368;
+--navy:#1A73E8;--navy-ink:#FFFFFF;--teal:#188038;--amber:#FBBC04;--amber-ink:#3C2A00;--bar:#1A73E8;--soft:#E8F0FE;
+--gb:#4285F4;--gr:#EA4335;--gy:#FBBC04;--gg:#34A853;
+--navyH:#1A73E8;--amberH:#B06000;--tealH:#188038;--plumH:#9334E6;--roseH:#D93025;--skyH:#1967D2;--onph:#fff;
+--f:"Source Sans 3",Calibri,Carlito,"Segoe UI",Arial,sans-serif;
+--h1:clamp(26px,2.6vw,32px);--h2:clamp(21px,2vw,25px);--h3:19px;--body:16.5px;--small:14px;--label:12.5px}
+[hidden]{display:none!important}
+*{box-sizing:border-box}html{scroll-padding-top:64px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 var(--body)/1.6 var(--f)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+main{max-width:880px;margin:0 auto;padding-block:16px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+b,strong{font-weight:700}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);padding:8px 0;display:flex;gap:6px;overflow-x:auto}
+nav a{flex:none;background:var(--card);border:1px solid var(--line);color:var(--ink);text-decoration:none;border-radius:999px;padding:6px 14px;font-size:var(--small);font-weight:600}
+nav a:hover,nav a:focus-visible{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);outline:none}
+.banner{background:var(--navy);color:var(--navy-ink);border-radius:18px;padding:22px 26px}
+.banner h1{margin:0 0 8px;font-size:var(--h1);font-weight:800;line-height:1.2;text-wrap:balance;letter-spacing:-.01em}.banner p{margin:0;font-size:18px;line-height:1.55;opacity:.97}.banner .goal b{font-weight:800}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.tags{align-items:center}.tlab{font-size:var(--small);font-weight:700;margin-right:4px;opacity:.95}
+.tag{border-radius:999px;padding:3px 12px;font-size:var(--label);font-weight:700;background:rgba(255,255,255,.2);letter-spacing:.02em}.tag.a{background:var(--amber);color:var(--amber-ink)}
+.card{border-radius:16px;padding:16px 20px;background:var(--card);border:1px solid var(--line);margin:12px 0}
+.card p{margin:8px 0}
+h2{font-size:var(--h2);font-weight:800;color:var(--head);margin:48px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--line);line-height:1.25;text-wrap:balance}
+h2 small{display:block;font-size:var(--small);font-weight:400;color:var(--mut);margin-top:4px}
+h3{font-size:var(--h3);font-weight:700;color:var(--head);margin:16px 0 6px;line-height:1.3}
+.card h3:first-child,.card>div>h3:first-child{margin-top:4px}
+.add{display:inline-block;vertical-align:middle;margin-left:8px;border-radius:999px;padding:2px 10px;font-size:var(--label);font-weight:700;background:var(--teal);color:#fff}
+.how{background:var(--soft);border-radius:12px;padding:12px 16px;margin:10px 0;font-size:var(--small);line-height:1.55;color:var(--ink)}.how::before{content:"Cara membaca ";font-weight:700;color:var(--teal)}
+.callout{border-radius:14px;padding:14px 20px;margin:12px 0;font-size:16px}.callout h4{margin:0 0 6px;font-size:var(--h3);font-weight:700}.callout p{margin:6px 0}
+.callout.a{background:var(--amber);color:var(--amber-ink)}.callout.g{background:var(--teal);color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}.kpis .card{margin:0}
+.kpi .v{font-size:30px;font-weight:800;display:block;line-height:1.15;color:var(--head);font-variant-numeric:tabular-nums}.kpi .l{display:block;font-weight:700;font-size:16px;margin-top:2px}.kpi .d{display:block;font-size:var(--small);line-height:1.4;margin-top:6px;color:var(--mut)}
+.kpi.t{background:var(--teal);border-color:var(--teal);color:#fff}.kpi.am{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.kpi.t .v,.kpi.t .d,.kpi.am .v,.kpi.am .d{color:inherit}
+table{border-collapse:collapse;width:100%;font-size:15px;background:var(--card);border-radius:12px;overflow:hidden}
+th{background:var(--navy);color:var(--navy-ink);padding:9px 12px;text-align:left;vertical-align:top;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(odd) td{background:var(--sub)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:10px 0}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:6px 0;display:grid;grid-template-columns:40px 1fr;gap:4px 8px;font-size:16px;line-height:1.45}
+.q .id{font-weight:800;color:var(--head)}.q .m{grid-column:2;font-size:var(--small);color:var(--mut)}
+.pri{display:inline-block;border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;margin-left:6px;background:var(--sub);border:1px solid var(--line);color:var(--mut)}.pri.M{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.pri.S{background:var(--navy);border-color:var(--navy);color:#fff}
+.theme{font-size:var(--label);font-weight:700;color:var(--teal);margin:20px 0 4px;text-transform:uppercase;letter-spacing:.08em}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0}
+.flow span{border-radius:999px;padding:5px 12px;font-size:var(--small);font-weight:700;background:var(--sub);border:1px solid var(--line)}
+.flow span.ng{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.flow span.ok{background:var(--teal);border-color:var(--teal);color:#fff}.flow i{font-style:normal;color:var(--mut);font-size:var(--small)}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0;width:100%;font:inherit;font-size:var(--small);color:var(--ink);background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.row .n{width:96px;flex:none;font-weight:600}.row .tr{flex:1;background:var(--sub);border-radius:8px;height:24px;position:relative;overflow:hidden}
+.row .b{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:var(--bar);transition:width .25s}
+.row.sel .b{background:var(--amber)}.row.sel .n{color:var(--head);font-weight:800}
+.row .c{width:58px;text-align:right;flex:none;font-variant-numeric:tabular-nums;font-weight:600}
+.row:focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:8px}
+.ctl{display:flex;align-items:center;gap:12px;margin:14px 0 10px;font-weight:700;font-size:15px}.ctl input{flex:1;accent-color:#F2A541}.ctl output{min-width:48px;text-align:right}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}.res div{background:var(--sub);border-radius:12px;padding:10px 14px;font-size:var(--small);color:var(--mut)}.res b{display:block;font-size:24px;font-weight:800;color:var(--head);font-variant-numeric:tabular-nums}
+.steps{counter-reset:s;display:grid;gap:8px;margin:10px 0;padding:0;list-style:none}
+.steps li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 54px;position:relative}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}
+.steps li.L::before{background:var(--amber);color:var(--amber-ink)}
+.steps b.t{display:block;font-size:17px;color:var(--head);line-height:1.3}.steps p{margin:6px 0;font-size:15px;line-height:1.5}.steps .meta{font-size:13px;color:var(--mut)}
+.phase{font-size:var(--label);font-weight:700;color:var(--teal);margin:18px 0 0;text-transform:uppercase;letter-spacing:.08em}
+.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:12px 0}.tools .card{margin:0}
+.tools b{display:block;font-size:var(--h3);color:var(--head)}.tools .r{font-size:15px;margin:6px 0 0}.tools .alt{font-size:var(--small);color:var(--mut);margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--line)}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0}summary{cursor:pointer;font-weight:700;font-size:17px;color:var(--head)}details p{font-size:15.5px}
+.pill{border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;background:var(--teal);color:#fff;margin-left:4px}.pill.d{background:var(--sub);border:1px solid var(--line);color:var(--mut)}
+.chip{display:inline-block;border-radius:999px;padding:3px 11px;margin:3px 4px 3px 0;font-size:var(--small);font-weight:600;background:var(--sub);border:1px solid var(--line)}
+.tm{border-bottom:2px dotted var(--amber);background:rgba(242,165,65,.16);border-radius:4px;padding:0 2px;cursor:help}
+#tip{position:fixed;display:none;max-width:320px;white-space:pre-line;background:#202124;color:#fff;padding:10px 12px;border-radius:12px;font-size:var(--small);line-height:1.4;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+ul.tight{margin:6px 0;padding-left:20px}ul.tight li{margin:5px 0}
+.intro>.layout{grid-column:1/-1}
+.layout{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.layout .lead{margin:4px 0 10px;max-width:90ch}
+.figw{overflow-x:auto;margin:8px 0}.figw svg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--f)}
+.figw .lane{fill:var(--sub)}.figw .box{fill:var(--card);stroke:var(--line);stroke-width:1.5}.figw .box.hi{stroke:var(--bar);stroke-width:2.5}
+.figw text{fill:var(--ink)}.figw .ln{font-size:15px;font-weight:700;fill:var(--head)}.figw .gl{font-size:13px;font-weight:700;fill:var(--teal);letter-spacing:.03em}
+.figw .bt{font-size:13px}.figw .b{font-size:15px;font-weight:700}.figw .st{font-size:13px;fill:var(--mut)}
+.figw .grp{stroke:var(--teal);stroke-width:2}.figw .ar{stroke:var(--bar);stroke-width:2}.figw .ah{fill:var(--bar)}
+.figw .ng,.figw .ngs{stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4}.figw .aha{fill:var(--amber)}.figw .nl{font-size:14px;font-weight:700;fill:var(--amberH)}
+.figw .dt{stroke:var(--mut);stroke-width:2;stroke-dasharray:2 4}
+.figw .okb{fill:var(--teal)}.figw .scb{fill:var(--amber)}.figw .wt{fill:#fff;font-size:14px;font-weight:700}.figw .at{fill:var(--amber-ink);font-size:14px;font-weight:700}
+.figw .mk{fill:var(--amber)}.figw .mt{fill:var(--amber-ink);font-size:14px;font-weight:800}
+.legend{counter-reset:l;list-style:none;padding:0;margin:10px 0 0;display:grid;gap:10px}
+.legend li{counter-increment:l;position:relative;padding-left:38px;font-size:15.5px;line-height:1.55}
+.legend li::before{content:counter(l);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--amber);color:var(--amber-ink);font-weight:800;font-size:14px;display:grid;place-items:center}
+@media (min-width:1000px){.legend{grid-template-columns:repeat(4,1fr);gap:16px}}
+.kpi{--h:var(--navyH);background:color-mix(in srgb,var(--h) 11%,var(--card));border-color:color-mix(in srgb,var(--h) 35%,var(--card))}
+.kpi .v{color:var(--h)}.kpi .l{color:var(--ink)}.kpi .d{color:var(--mut)}
+.q[data-p="M"]{background:color-mix(in srgb,var(--amber) 13%,var(--card));border-color:color-mix(in srgb,var(--amber) 60%,var(--card))}
+.q[data-p="S"]{background:color-mix(in srgb,var(--skyH) 9%,var(--card));border-color:color-mix(in srgb,var(--skyH) 35%,var(--card))}
+.q[data-p="N"]{border-style:dashed}
+.q[data-p="M"] .id{color:var(--amberH)}.q[data-p="S"] .id{color:var(--skyH)}.q[data-p="N"] .id{color:var(--mut)}
+.pri.S{background:var(--skyH);border-color:var(--skyH);color:var(--onph)}
+.fbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}.fbar span{font-size:var(--small);font-weight:700;color:var(--mut);margin-right:2px}
+.fb{font:inherit;font-size:var(--small);font-weight:700;cursor:pointer;border-radius:999px;padding:6px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.fb i{font-style:normal;opacity:.7;margin-left:4px}.fb:hover{border-color:var(--bar)}.fb:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.fb.on{background:var(--navy);border-color:var(--navy);color:#fff}.fb.on[data-f="M"]{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.fb.on[data-f="S"]{background:var(--skyH);border-color:var(--skyH);color:var(--onph)}
+.defs p{margin:0 0 12px}.defs p:last-child{margin:0}
+.fx{display:inline-block;margin:2px 0;padding:1px 9px;border-radius:8px;background:color-mix(in srgb,var(--tealH) 12%,var(--card));border:1px solid color-mix(in srgb,var(--tealH) 40%,var(--card));color:var(--tealH);font-weight:700;font-size:15px;white-space:normal}
+.figw.fl svg{min-width:520px;max-width:1000px;margin:0 auto}.flowfull .card{padding:20px 24px}.flowfull .card>p{text-align:center;margin:12px 0 0}.figw .dia{fill:var(--sub);stroke:var(--bar);stroke-width:2}.figw .b2{font-size:14px;font-weight:700}
+.figw .arT{fill:none;stroke:var(--teal);stroke-width:2}.figw .aht{fill:var(--teal)}.figw .arA{fill:none;stroke:var(--amber);stroke-width:2}.figw .aha2{fill:var(--amber)}
+.figw .lt{font-size:13px;font-weight:700;fill:var(--tealH)}.figw .la{font-size:13px;font-weight:700;fill:var(--amberH)}
+.ph .phase{color:var(--ph);font-size:13.5px}
+.ph .steps li{background:color-mix(in srgb,var(--ph) 8%,var(--card));border-color:color-mix(in srgb,var(--ph) 32%,var(--card))}
+.ph .steps li::before,.ph .steps li.L::before{background:var(--ph);color:var(--onph)}
+.ph .steps b.t{color:var(--ink)}
+.steps li.L::after{content:"beban besar";position:absolute;right:12px;top:12px;font-size:11.5px;font-weight:700;letter-spacing:.03em;padding:1px 8px;border-radius:999px;border:1px solid var(--ph,var(--amber));color:var(--ph,var(--amber))}
+.steps li.L b.t{padding-right:84px}
+.banner{background:linear-gradient(120deg,#1A73E8,#4285F4)}
+h2{border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gb) 0 60px,var(--line) 60px) 1}
+nav a:nth-child(4n+1):hover{background:var(--gb);border-color:var(--gb);color:#fff}nav a:nth-child(4n+2):hover{background:var(--gr);border-color:var(--gr);color:#fff}nav a:nth-child(4n+4):hover{background:var(--gg);border-color:var(--gg);color:#fff}
+.callout.g{background:#E6F4EA;color:#0D652D;border:1px solid #A8DAB5}.callout.g h4{color:#137333}
+.callout.a{background:#FEF7E0;color:#3C2A00;border:1px solid #FDD663}
+.outs{display:grid;gap:12px;margin:12px 0}.outs .card{margin:0}
+.out{--h:var(--navyH);border-top:4px solid var(--h)}
+.out .oh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.out .oh b{font-size:var(--h3);color:var(--h);line-height:1.3}
+.ob{flex:none;border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;background:var(--amber);color:var(--amber-ink)}.ob.opt{background:var(--sub);border:1px solid var(--line);color:var(--mut)}
+.out ul{margin:8px 0 0;padding-left:18px;font-size:15px;line-height:1.5}.out li{margin:4px 0}
+.out li:nth-last-child(-n+2){color:var(--mut);font-size:14px}
+@media (min-width:700px){.outs{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1280px){.outs{grid-template-columns:repeat(4,1fr)}}
+.tag.c1{background:#188038;color:#fff}.tag.c2{background:#9334E6;color:#fff}.tag.c3{background:#D93025;color:#fff}.tag.c4{background:#fff;color:#1A73E8}
+.sample td:first-child{white-space:nowrap}.src{border-top:1px dashed var(--line);padding-top:8px;font-size:15px}.src code{font-size:13.5px;background:var(--soft);padding:1px 6px;border-radius:6px}.note{font-size:13px;color:var(--mut);margin:6px 0 0}
+.wf{display:grid;gap:4px}
+.wl{--c:var(--navyH);position:relative;background:color-mix(in srgb,var(--c) 8%,var(--card));border:1px solid color-mix(in srgb,var(--c) 30%,var(--card));border-radius:14px;padding:10px 12px 12px}
+.wl h4{margin:0 0 10px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
+.ws{display:grid;gap:22px}
+.wb{position:relative;background:var(--card);border:2px solid var(--c);border-radius:12px;padding:10px 12px 10px 52px;min-height:62px}
+.wb .n{position:absolute;left:12px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--c);color:var(--onph);font-weight:800;font-size:14px;display:grid;place-items:center}
+.wb b{display:block;font-size:15px;line-height:1.3}.wb .s{display:block;font-size:13px;color:var(--mut);margin-top:2px}
+.wb.L::before{content:"beban besar";position:absolute;top:-10px;right:10px;background:var(--amber);color:var(--amber-ink);font-size:11px;font-weight:700;padding:0 8px;border-radius:999px;line-height:18px}
+.wb:not(:last-child)::after{content:"↓";position:absolute;left:50%;bottom:-21px;transform:translateX(-50%);color:var(--c);font-weight:800;font-size:16px;line-height:1}
+.wa{text-align:center;font-weight:800;font-size:20px;color:var(--mut);line-height:1.2}
+.wrow,.wrow1{display:grid;gap:4px}
+.wrow>.wl:first-child{margin-bottom:24px}.wrow>.wl:first-child::after{content:"↓";position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);font-weight:800;font-size:20px;color:var(--mut)}
+@media (min-width:1200px){
+.wrow{grid-template-columns:2fr 3fr;gap:30px}.wrow>.wl:first-child{margin-bottom:0}.wrow>.wl:first-child::after{content:"→";left:auto;right:-24px;bottom:auto;top:50%;transform:translateY(-50%)}
+.wrow1{grid-template-columns:2fr 3fr}
+.ws{grid-template-columns:repeat(var(--k),1fr);gap:26px}
+.wb:not(:last-child)::after{content:"→";left:auto;right:-25px;bottom:auto;top:50%;transform:translateY(-50%)}
+.wl{padding-left:8px;padding-right:8px}.ws{gap:34px}
+.wrow,.wrow1{gap:16px}.wrow>.wl:first-child::after{right:-14px;font-size:16px}
+}
+.docs code{font-size:13.5px;background:var(--soft);padding:1px 6px;border-radius:6px;white-space:nowrap}.docs td:nth-child(3){white-space:nowrap}
+/* layar lebar: nav jadi sidebar, konten dibagi kolom */
+.two{display:grid;gap:0 24px;align-items:start}.two>*{min-width:0}
+.qgrid{display:grid;gap:0 12px}.qgrid>*{min-width:0}
+@media (min-width:1000px){
+main{max-width:1480px}
+.two,.qgrid{grid-template-columns:1fr 1fr}.qgrid .theme{grid-column:1/-1}
+.kpis{grid-template-columns:repeat(6,1fr)}.tools{grid-template-columns:repeat(3,1fr)}
+.intro{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;align-items:start}.intro h3{grid-column:1/-1}.intro>p{grid-column:1}.intro>.scroll{grid-column:2;grid-row:2/span 3;margin-top:8px}
+.phases{display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px}.phases>*{min-width:0}
+}
+@media (min-width:1280px){
+main{display:grid;grid-template-columns:190px minmax(0,1fr);column-gap:32px}
+main>*{grid-column:2}
+main>nav{grid-column:1;grid-row:1/span 60;align-self:start;flex-direction:column;padding-top:16px}
+main>nav a{border-radius:10px;font-size:15px;padding:8px 14px}
+.phases{grid-template-columns:repeat(4,1fr)}
+}
+@media (max-width:620px){.kpis,.res{grid-template-columns:1fr 1fr}.tools{grid-template-columns:1fr}.row .n{width:78px}.banner{padding:18px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.row .b{transition:none}}
+.figw .box.warn{stroke:var(--amber);stroke-width:2.5}.figw .arA.dsh{stroke-dasharray:5 4}.figw .arB{fill:none;stroke:var(--bar);stroke-width:2}
+#bars .row .n{width:190px}#bars .row .g{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:color-mix(in srgb,var(--amber) 38%,var(--card))}
+#bars .row .b{background:var(--bar)}#bars .row.sel .b{background:var(--bar)}#bars .row.sel .n{color:var(--ink);font-weight:600}
+#bars .row .tg{width:118px;flex:none;font-size:12px;font-weight:700;text-align:center;border-radius:999px;padding:1px 6px;background:var(--sub);border:1px solid var(--line);color:var(--mut)}
+#bars .row.sel .tg{background:#E6F4EA;border-color:#A8DAB5;color:#0D652D}#bars .row.na{cursor:not-allowed}#bars .row.na .tg{background:#FEF7E0;border-color:#FDD663;color:#3C2A00}
+#bars.up .row{cursor:default}#bars.up .row .g{background:var(--bar);z-index:1}#bars.up .row .b{background:var(--teal)}
+.figw .lb{font-size:13px;font-weight:700;fill:var(--head)}
+.src a{color:var(--navy);font-weight:600}
+@media (min-width:1200px){.wa{display:grid;grid-template-columns:repeat(5,1fr);gap:34px;padding:0 9px}.wa.r span{grid-column:5}.wa.l span{grid-column:1}
+.ws.rev{direction:rtl}.ws.rev .wb{direction:ltr}.ws.rev .wb:not(:last-child)::after{content:"←";right:auto;left:-25px}}
+@media (max-width:620px){#bars .row{flex-wrap:wrap;gap:4px 8px}#bars .row .n{width:100%}#bars .row .tg{width:auto}}
+</style>
+</head><body>
+<a href="https://bagusbernadi.github.io/" style="display:inline-block;margin:12px 16px;font:600 14px/1.4 'Source Sans 3',Arial,sans-serif;color:#1A73E8;text-decoration:none">← All projects / Semua project</a>
+<main>
+<nav aria-label="Section navigation"><a href="#s1">Background</a><a href="#s2">Business Questions</a><a href="#s3">ETL Flow &amp; Data Quality</a><a href="#s4">Dataset</a><a href="#s5">Tools</a><a href="#s6">Work Plan</a><a href="#s7">Project Outputs</a><a href="#s8">Success Criteria</a><a href="#s9">Assumptions &amp; Limitations</a></nav>
+
+<header class="banner"><h1>Project 33: Automated ETL: Excel Log → SQL Database</h1>
+<p class="goal"><b>Tujuan project:</b> membangun pipeline ETL otomatis yang membaca log Excel operator yang berantakan, membersihkan dan memvalidasinya, lalu memuatnya ke database SQL, untuk mengukur seberapa banyak data yang bermasalah dan berapa jam kerja yang bisa dihemat, sehingga laporan produksi bisa disusun dalam hitungan menit.</p>
+<div class="tags"><span class="tlab">Kategori:</span><span class="tag a">Rancangan project</span><span class="tag c1">Manufaktur smartphone</span><span class="tag c2">Data simulasi</span><span class="tag c3">Python ETL + SQL</span></div></header>
+
+<section class="card intro">
+<h3>Project Introduction</h3>
+<p>Bayangkan kantor pos yang menerima ribuan surat setiap hari. Alamatnya ditulis dengan cara yang berbeda-beda: ada yang lengkap, ada yang menyingkat nama kota, ada yang tulisannya sulit dibaca. Petugas harus merapikan alamat, menyisihkan surat yang alamatnya tidak lengkap, lalu menyusun surat di rak sesuai tujuan.</p>
+<p>Log produksi di pabrik mirip dengan tumpukan surat itu. Setiap stasiun punya file Excel sendiri, formatnya berubah dari bulan ke bulan, dan cara menulis tanggal atau nama model tidak seragam. Sebelum laporan bisa dibuat, seseorang harus merapikan semuanya secara manual.</p>
+<div class="scroll"><table><tr><th>Di kantor pos</th><th>Di pabrik smartphone</th></tr>
+<tr><td>Surat dengan tulisan alamat beragam</td><td>File log Excel operator dengan format berbeda per stasiun dan per bulan</td></tr>
+<tr><td>Petugas menulis ulang alamat dengan format standar</td><td>Transform: menyeragamkan tanggal, nama model, shift, dan nama kolom</td></tr>
+<tr><td>Surat beralamat tidak lengkap disisihkan</td><td>Baris yang gagal validasi masuk tabel karantina beserta alasannya</td></tr>
+<tr><td>Rak yang tersusun per kota tujuan</td><td>Database SQL dengan tabel produksi yang rapi</td></tr>
+<tr><td>Laporan harian kepala kantor</td><td>Query analitik dan laporan produksi yang dibuat otomatis</td></tr>
+</table></div>
+<p>Project ini membangun <b>pipeline ETL</b> yang bisa dijalankan ulang kapan saja: semua file Excel dibaca, dirapikan, divalidasi, lalu dimuat ke database tanpa menggandakan data. Project 30 mencegah data kotor sejak input, sedangkan project ini merapikan log lama yang sudah terlanjur berantakan. Kata bergaris bawah putus-putus kuning bisa diklik untuk melihat artinya.</p>
+<div class="layout">
+<h3>Gambaran alur kerja di lini perakitan smartphone</h3>
+<p class="lead">Lini produksi bisa dibayangkan sebagai tiga jalur. Jalur pertama adalah proses produksi. Jalur kedua adalah cara laporan disusun saat ini. Jalur ketiga adalah yang dibangun di project ini.</p>
+<div class="figw"><svg viewBox="0 0 1240 434" role="img" aria-label="Alur kerja lini perakitan smartphone: jalur produksi 10 stasiun, jalur pelaporan manual dari log Excel, dan pipeline ETL menuju database dan laporan otomatis"><defs><marker id="mN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker><marker id="mT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aht" d="M0 0L10 5L0 10z"/></marker></defs><rect class="lane" x="0" y="8" width="1240" height="130" rx="14"/><rect class="lane" x="0" y="150" width="1240" height="140" rx="14"/><rect class="lane" x="0" y="302" width="1240" height="130" rx="14"/>
+<text class="ln" x="16" y="78">Jalur</text><text class="ln" x="16" y="96">produksi</text>
+<text class="ln" x="16" y="218">Pelaporan</text><text class="ln" x="16" y="236">saat ini</text>
+<text class="ln" x="16" y="362">Jalur data</text><text class="ln" x="16" y="380">baru</text>
+<line class="grp" x1="120" x2="1124" y1="40" y2="40"/><text class="gl" x="622" y="32" text-anchor="middle">10 stasiun perakitan smartphone</text><rect class="box" x="120" y="52" width="95" height="60" rx="10"/><text class="bt" x="167.5" y="78" text-anchor="middle">Solder Paste</text><text class="bt" x="167.5" y="95" text-anchor="middle">Printing</text><line class="ar" x1="215" x2="219" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="221" y="52" width="95" height="60" rx="10"/><text class="bt" x="268.5" y="78" text-anchor="middle">Component</text><text class="bt" x="268.5" y="95" text-anchor="middle">Placement</text><line class="ar" x1="316" x2="320" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="322" y="52" width="95" height="60" rx="10"/><text class="bt" x="369.5" y="78" text-anchor="middle">Reflow</text><text class="bt" x="369.5" y="95" text-anchor="middle">Soldering</text><line class="ar" x1="417" x2="421" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="423" y="52" width="95" height="60" rx="10"/><text class="bt" x="470.5" y="78" text-anchor="middle">AOI</text><text class="bt" x="470.5" y="95" text-anchor="middle">Inspection</text><line class="ar" x1="518" x2="522" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="524" y="52" width="95" height="60" rx="10"/><text class="bt" x="571.5" y="78" text-anchor="middle">Board Test</text><text class="bt" x="571.5" y="95" text-anchor="middle">(ICT)</text><line class="ar" x1="619" x2="623" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="625" y="52" width="95" height="60" rx="10"/><text class="bt" x="672.5" y="78" text-anchor="middle">Screen</text><text class="bt" x="672.5" y="95" text-anchor="middle">Assembly</text><line class="ar" x1="720" x2="724" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="726" y="52" width="95" height="60" rx="10"/><text class="bt" x="773.5" y="78" text-anchor="middle">Housing</text><text class="bt" x="773.5" y="95" text-anchor="middle">Assembly</text><line class="ar" x1="821" x2="825" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="827" y="52" width="95" height="60" rx="10"/><text class="bt" x="874.5" y="78" text-anchor="middle">Final</text><text class="bt" x="874.5" y="95" text-anchor="middle">Inspection</text><line class="ar" x1="922" x2="926" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="928" y="52" width="95" height="60" rx="10"/><text class="bt" x="975.5" y="78" text-anchor="middle">Functional</text><text class="bt" x="975.5" y="95" text-anchor="middle">Test</text><line class="ar" x1="1023" x2="1027" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="1029" y="52" width="95" height="60" rx="10"/><text class="bt" x="1076.5" y="87" text-anchor="middle">Packaging</text><line class="ar" x1="1124" x2="1160" y1="82" y2="82" marker-end="url(#mN)"/><text class="bt" x="1166" y="87">Gudang</text>
+<line class="dt" x1="170" x2="170" y1="116" y2="192" marker-end="url(#mN)"/><text class="st" x="182" y="176">setiap stasiun mencatat input, OK, dan NG di log Excel</text>
+<rect class="box" x="120" y="196" width="200" height="62" rx="10"/><text class="bt b" x="220" y="222" text-anchor="middle">Log Excel per stasiun</text><text class="st" x="220" y="242" text-anchor="middle">format berbeda-beda</text><line class="ar" x1="320" x2="366" y1="227" y2="227" marker-end="url(#mN)"/><rect class="box" x="370" y="196" width="200" height="62" rx="10"/><text class="bt b" x="470" y="222" text-anchor="middle">Salin dan gabung</text><text class="st" x="470" y="242" text-anchor="middle">copy-paste manual</text><line class="ar" x1="570" x2="616" y1="227" y2="227" marker-end="url(#mN)"/><rect class="box" x="620" y="196" width="200" height="62" rx="10"/><text class="bt b" x="720" y="222" text-anchor="middle">Rapikan dan hitung</text><text class="st" x="720" y="242" text-anchor="middle">rumus Excel manual</text><line class="ar" x1="820" x2="866" y1="227" y2="227" marker-end="url(#mN)"/><rect class="box warn" x="870" y="196" width="240" height="62" rx="10"/><text class="bt b" x="990" y="222" text-anchor="middle">Laporan lambat</text><text class="st" x="990" y="242" text-anchor="middle">salah hitung tidak terlihat</text>
+<line class="arT" x1="220" x2="220" y1="262" y2="336" marker-end="url(#mT)"/><text class="lt" x="232" y="322">diganti pipeline ETL</text>
+<rect class="box hi" x="120" y="340" width="200" height="62" rx="10"/><text class="bt b" x="220" y="366" text-anchor="middle">Extract</text><text class="st" x="220" y="386" text-anchor="middle">baca semua file Excel</text><line class="ar" x1="320" x2="366" y1="371" y2="371" marker-end="url(#mN)"/><rect class="box hi" x="370" y="340" width="200" height="62" rx="10"/><text class="bt b" x="470" y="366" text-anchor="middle">Transform + validasi</text><text class="st" x="470" y="386" text-anchor="middle">seragamkan, karantina</text><line class="ar" x1="570" x2="616" y1="371" y2="371" marker-end="url(#mN)"/><rect class="box hi" x="620" y="340" width="200" height="62" rx="10"/><text class="bt b" x="720" y="366" text-anchor="middle">Load ke DuckDB</text><text class="st" x="720" y="386" text-anchor="middle">tanpa data ganda</text><line class="ar" x1="820" x2="866" y1="371" y2="371" marker-end="url(#mN)"/><rect class="box" x="870" y="340" width="240" height="62" rx="10"/><text class="bt b" x="990" y="366" text-anchor="middle">Laporan otomatis</text><text class="st" x="990" y="386" text-anchor="middle">Streamlit + Plotly</text>
+<line class="grp" x1="120" x2="820" y1="410" y2="410"/><text class="gl" x="470" y="426" text-anchor="middle">Bagian yang dibangun di project ini</text>
+<circle class="mk" cx="120" cy="52" r="13"/><text class="mt" x="120" y="57" text-anchor="middle">1</text>
+<circle class="mk" cx="120" cy="196" r="13"/><text class="mt" x="120" y="201" text-anchor="middle">2</text>
+<circle class="mk" cx="120" cy="340" r="13"/><text class="mt" x="120" y="345" text-anchor="middle">3</text>
+<circle class="mk" cx="370" cy="340" r="13"/><text class="mt" x="370" y="345" text-anchor="middle">4</text>
+</svg></div>
+<ol class="legend">
+<li><b>Jalur produksi.</b> Komponen melewati 10 stasiun, dari Solder Paste Printing sampai Packaging. Setiap stasiun mencatat input, OK, dan NG di log Excel masing-masing.</li>
+<li><b>Pelaporan saat ini.</b> Engineer mengumpulkan file dari setiap stasiun, menyalin datanya ke satu file, merapikan format, lalu menghitung KPI secara manual.</li>
+<li><b>Extract dan transform.</b> Program membaca semua file sekaligus, mengenali format yang berbeda, lalu menyeragamkan tanggal, model, shift, dan nama kolom.</li>
+<li><b>Validasi, load, dan laporan.</b> Baris yang lolos validasi dimuat ke database, baris yang gagal masuk karantina. Laporan dibuat otomatis dari database.</li>
+</ol>
+</div>
+</section>
+
+<div class="kpis">
+<div class="card kpi" style="--h:var(--navyH)"><span class="v">13</span><span class="l">pertanyaan analisis</span><span class="d">Hal yang ingin dijawab, 8 di antaranya prioritas utama (bagian 2).</span></div>
+<div class="card kpi" style="--h:var(--amberH)"><span class="v">5</span><span class="l">ukuran kinerja (KPI)</span><span class="d">Load rate, reject rate, data quality score, waktu proses, dan jam dihemat (bagian 3).</span></div>
+<div class="card kpi" style="--h:var(--tealH)"><span class="v">12</span><span class="l">langkah pengerjaan</span><span class="d">Dari inventaris format file sampai laporan otomatis dan README (bagian 6).</span></div>
+<div class="card kpi" style="--h:var(--plumH)"><span class="v">±60</span><span class="l">file log Excel</span><span class="d">10 stasiun × ±6 bulan, dengan 3 versi format yang berbeda.</span></div>
+<div class="card kpi" style="--h:var(--roseH)"><span class="v">±6 bulan</span><span class="l">periode data</span><span class="d">Cukup untuk melihat perubahan format dan tren kualitas data.</span></div>
+<div class="card kpi" style="--h:var(--skyH)"><span class="v">4</span><span class="l">tabel data</span><span class="d">Staging, produksi bersih, karantina, dan riwayat run (bagian 4).</span></div>
+</div>
+
+<h2 id="s1">1. Background<small>Kenapa tema ini dipilih</small></h2>
+<div class="card two">
+<div><h3>Latar belakang masalah</h3>
+<p>Di lini perakitan smartphone, setiap stasiun mencatat hasil produksi di file Excel sendiri. Template-nya pernah diubah beberapa kali dan setiap operator punya kebiasaan menulis yang berbeda. Akibatnya:</p>
+<ul class="tight">
+<li>Menyusun laporan bulanan berarti membuka puluhan file, menyalin data, dan merapikan format satu per satu.</li>
+<li>Penulisan model (Pro, PRO, "Model Pro") dan tanggal yang tidak seragam membuat rumus Excel salah menghitung tanpa disadari.</li>
+<li>Merged cell, baris subtotal, dan baris kosong di tengah data membuat file sulit dibaca program.</li>
+<li>Tidak ada catatan baris mana yang dibuang atau diperbaiki, sehingga angka laporan sulit dipertanggungjawabkan.</li>
+</ul></div>
+<div><h3>Alasan memilih tema ini sebagai portofolio</h3>
+<ul class="tight">
+<li><b>Dekat dengan pekerjaan sehari-hari.</b> Merekap log Excel operator adalah pekerjaan rutin Process Engineer, dan masalah formatnya dialami langsung.</li>
+<li><b>Menunjukkan skill data engineering dasar.</b> Membaca file berantakan, cleaning, validasi, load yang aman dijalankan ulang, rekonsiliasi, dan test.</li>
+<li><b>Tingkat kesulitan sulit.</b> Analisisnya sederhana, tetapi menangani banyak format dan menjaga hasil tetap konsisten butuh ketelitian.</li>
+<li><b>Terhubung dengan project lain.</b> Database hasil ETL bisa dipakai Project 3 (Yield, Rework &amp; Defect Tracking) dan Project 23 (Telegram Bot KPI Reporting), dan melengkapi Project 30 serta Project 25 (Messy Excel Report Parser).</li>
+</ul></div>
+</div>
+
+<h2 id="s2">2. Business Questions<small>Satu pertanyaan utama, dipecah menjadi pertanyaan yang lebih kecil</small></h2>
+<div class="callout a"><h4>Pertanyaan utama</h4>Bagaimana mengubah log operator yang berantakan menjadi data siap analisis?</div>
+<p class="how">Pertanyaan utama dipecah per tema. Label "Utama" berarti wajib dijawab dan dikerjakan lebih dulu. "Pendukung" memperdalam hasil. "Tambahan" dikerjakan jika waktu tersisa. Teks abu-abu di bawah tiap pertanyaan adalah cara menjawabnya.</p>
+<div class="fbar" role="group" aria-label="Filter pertanyaan"><span>Tampilkan:</span><button type="button" class="fb on" data-f="*">Semua <i>13</i></button><button type="button" class="fb" data-f="M">Utama <i>8</i></button><button type="button" class="fb" data-f="S">Pendukung <i>4</i></button><button type="button" class="fb" data-f="N">Tambahan <i>1</i></button></div>
+<div class="qgrid" id="qg">
+<p class="theme">Kualitas data mentah</p>
+<div class="q" data-p="M"><span class="id">Q1</span><span>Jenis masalah apa yang paling sering muncul di log Excel, dan berapa persen baris yang terdampak?<span class="pri M">Utama</span></span><span class="m">Profil masalah data per jenis aturan</span></div>
+<div class="q" data-p="M"><span class="id">Q2</span><span>Stasiun dan file mana yang paling berantakan?<span class="pri M">Utama</span></span><span class="m">Data quality score per stasiun dan per file</span></div>
+<div class="q" data-p="S"><span class="id">Q3</span><span>Apakah kualitas log membaik atau memburuk dari bulan ke bulan?<span class="pri S">Pendukung</span></span><span class="m">Tren reject rate bulanan</span></div>
+
+<p class="theme">Proses ETL</p>
+<div class="q" data-p="M"><span class="id">Q4</span><span>Berapa persen baris yang berhasil dimuat otomatis, dan berapa yang masuk karantina?<span class="pri M">Utama</span></span><span class="m">Load rate dan reject rate per run</span></div>
+<div class="q" data-p="M"><span class="id">Q5</span><span>Berapa lama satu kali run ETL untuk semua file?<span class="pri M">Utama</span></span><span class="m">Durasi di riwayat run</span></div>
+<div class="q" data-p="M"><span class="id">Q6</span><span>Jika ETL dijalankan ulang, apakah hasilnya sama dan tidak ada data ganda?<span class="pri M">Utama</span></span><span class="m">Uji run dua kali, jumlah baris harus sama</span></div>
+
+<p class="theme">Query analitik</p>
+<div class="q" data-p="M"><span class="id">Q7</span><span>Berapa output, yield, dan NG per stasiun, model, dan bulan berdasarkan data yang sudah bersih?<span class="pri M">Utama</span></span><span class="m">Query SQL di database hasil ETL</span></div>
+<div class="q" data-p="S"><span class="id">Q8</span><span>Bagaimana tren harian yield dan NG, dan adakah lonjakan?<span class="pri S">Pendukung</span></span><span class="m">Grafik tren, rata-rata bergerak 7 hari</span></div>
+
+<p class="theme">Dampak</p>
+<div class="q" data-p="M"><span class="id">Q9</span><span>Berapa jam kerja penyusunan laporan yang bisa dihemat per tahun?<span class="pri M">Utama</span></span><span class="m">(Menit manual − menit ETL) × laporan per tahun ÷ 60</span></div>
+<div class="q" data-p="S"><span class="id">Q10</span><span>Berapa lama waktu dari data tersedia sampai laporan siap, sebelum dan sesudah ETL?<span class="pri S">Pendukung</span></span><span class="m">Perbandingan waktu tunggu laporan</span></div>
+
+<p class="theme">Validitas</p>
+<div class="q" data-p="M"><span class="id">Q11</span><span>Apakah total input, OK, dan NG di database sama dengan total di file Excel asli?<span class="pri M">Utama</span></span><span class="m">Rekonsiliasi: total database + total karantina = total file asli</span></div>
+<div class="q" data-p="S"><span class="id">Q12</span><span>Apakah baris di karantina bisa diperbaiki lalu dimuat ulang tanpa merusak data lain?<span class="pri S">Pendukung</span></span><span class="m">Uji perbaikan dan reload</span></div>
+<div class="q" data-p="N"><span class="id">Q13</span><span>Bisakah ETL berjalan otomatis setiap hari saat file baru masuk?<span class="pri">Tambahan</span></span><span class="m">Jadwal harian (Task Scheduler atau GitHub Actions)</span></div>
+</div>
+
+<h2 id="s3">3. ETL Flow &amp; Data Quality<span class="add">Komponen tambahan</span><small>Bagaimana setiap baris diproses, dan berapa waktu yang bisa dihemat</small></h2>
+<p class="how">Data yang masuk database harus bisa dipertanggungjawabkan. Karena itu setiap baris yang ditolak dicatat beserta alasannya, bukan dibuang diam-diam. Arahkan kursor atau klik kata yang diberi garis bawah kuning untuk melihat pengertian dan rumusnya.</p>
+<div class="flowfull"><h3>Alur satu baris data</h3>
+<div class="card"><div class="figw fl"><svg viewBox="0 0 640 262" role="img" aria-label="Diagram percabangan: baris dari log Excel diperiksa; jika valid dimuat ke database dan laporan siap, jika tidak masuk karantina lalu diperbaiki dan dimuat ulang"><defs><marker id="fN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker><marker id="fT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aht" d="M0 0L10 5L0 10z"/></marker><marker id="fA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aha2" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="box" x="8" y="93" width="110" height="44" rx="10"/><text class="b2" x="63" y="120" text-anchor="middle">Excel row</text>
+<line class="ar" x1="118" x2="146" y1="115" y2="115" marker-end="url(#fN)"/>
+<polygon class="dia" points="148,115 200,79 252,115 200,151"/><text class="b2" x="200" y="120" text-anchor="middle" style="font-size:13px">Valid row?</text>
+<polyline class="arT" points="200,79 200,32 286,32" marker-end="url(#fT)"/><text class="lt" x="208" y="62">Ya</text>
+<rect class="box" x="290" y="10" width="130" height="44" rx="10"/><text class="b2" x="355" y="37" text-anchor="middle">Load to DB</text>
+<line class="arT" x1="420" x2="456" y1="32" y2="32" marker-end="url(#fT)"/>
+<rect class="okb" x="460" y="12" width="170" height="40" rx="20"/><text class="wt" x="545" y="37" text-anchor="middle">Report ready</text>
+<polyline class="arA" points="200,151 200,200 286,200" marker-end="url(#fA)"/><text class="la" x="208" y="180">Tidak</text>
+<rect class="scb" x="290" y="180" width="150" height="40" rx="20"/><text class="at" x="365" y="205" text-anchor="middle">Quarantine</text>
+<line class="arA" x1="440" x2="466" y1="200" y2="200" marker-end="url(#fA)"/>
+<rect class="box" x="470" y="178" width="160" height="44" rx="10"/><text class="b2" x="550" y="205" text-anchor="middle">Fix &amp; reload</text>
+<polyline class="arA dsh" points="550,222 550,248 63,248 63,141" marker-end="url(#fA)"/><text class="la" x="300" y="242" text-anchor="middle">dimuat ulang</text>
+</svg></div>
+<p>Baris yang gagal validasi tidak diperbaiki diam-diam. Baris itu masuk karantina beserta alasannya, lalu bisa diperbaiki dan dimuat ulang.</p></div></div>
+
+<h3>Berapa jam penyusunan laporan yang bisa dihemat</h3>
+<p class="how">Setiap batang adalah satu langkah menyusun laporan produksi, dalam menit per laporan (angka contoh, bukan hasil dari data). Batang muda menunjukkan waktu manual, batang biru menunjukkan sisa waktu setelah ETL. Klik sebuah langkah untuk menyalakan atau mematikan otomatisasinya, lalu geser slider untuk mengatur jumlah laporan per bulan.</p>
+<div class="card"><div id="bars"></div>
+<div class="ctl"><label for="sl">Laporan per bulan</label><input id="sl" type="range" min="0" max="30" value="8"><output id="slo" for="sl">8</output></div>
+<div class="res"><div>Menit per laporan (manual)<b id="r1"></b></div><div>Menit per laporan (ETL)<b id="r2"></b></div><div>Jam dihemat/tahun<b id="r3"></b></div></div>
+<p id="ins" style="margin:12px 0 0;font-size:15.5px"></p></div>
+
+<h2 id="s4">4. Dataset<small>Log Excel simulasi yang meniru kebiasaan pencatatan di lini perakitan smartphone</small></h2>
+<div class="two"><div class="card">
+<p><b>Kenapa data simulasi?</b> Log produksi asli bersifat rahasia. File Excel dibuat dengan program Python yang meniru masalah nyata: template yang berubah, penulisan yang tidak seragam, merged cell, dan baris subtotal. Karena masalahnya sengaja ditanam, hasil ETL bisa diperiksa satu per satu.</p>
+<p><b>Ukuran:</b> 10 stasiun, 3 model, 2 shift, ±6 bulan, sekitar 60 file Excel. Perkiraan jumlah baris: ±7.000 baris produksi (stasiun × model × shift × hari). Jumlah pastinya baru diketahui setelah data dibuat.</p>
+<p class="src"><b>Sumber data:</b> data simulasi buatan sendiri, dibuat oleh skrip <code>scripts/generate_messy_logs.py</code> di repositori project (Versi: v1, rancangan; Tanggal dibuat: saat Tahap B dikerjakan). Tidak memakai data perusahaan.</p>
+</div>
+<div class="callout g"><h4>Fakta yang sengaja ditanam (ground truth)</h4>
+<p>1. Tiga versi template: kolom berbeda urutan dan nama (misalnya "Qty OK" dan "OK"), termasuk satu template khusus AOI Inspection.</p>
+<p>2. Format tanggal campuran: 02/08/2026, 2026-08-02, dan angka serial Excel.</p>
+<p>3. Nama model ditulis beragam: Pro, PRO, pro, dan "Model Pro".</p>
+<p>4. Merged cell di judul, baris subtotal, dan baris kosong di tengah data.</p>
+<p>5. Sekitar 2–3% nilai tidak valid: jumlah negatif, OK + NG lebih dari input, baris ganda, dan shift kosong. Selain itu, NG di Reflow Soldering dibuat naik di bulan ke-4.</p></div></div>
+
+<h3>Empat tabel yang akan dibuat</h3>
+<p class="how">Data mentah disimpan apa adanya di tabel staging, lalu baru dipindahkan ke tabel bersih setelah lolos validasi. Dengan begitu setiap angka di laporan bisa ditelusuri kembali ke file dan baris asalnya.</p>
+<div class="scroll"><table>
+<tr><th>Tabel</th><th>Isi (1 baris = …)</th><th>Kolom utama</th></tr>
+<tr><td><b>stg_raw_rows</b></td><td>Satu baris mentah dari file Excel, apa adanya</td><td>source_file, sheet, row_no, template_version, raw_json, run_id</td></tr>
+<tr><td><b>production_log</b></td><td>Hasil satu stasiun, satu model, satu shift, satu hari (bersih)</td><td>date, shift, station, model, input_qty, ok_qty, ng_qty, source_file, row_no</td></tr>
+<tr><td><b>rejected_rows</b></td><td>Satu baris yang gagal validasi (karantina)</td><td>source_file, row_no, rule_failed, raw_value, run_id, fixed_at</td></tr>
+<tr><td><b>etl_run_log</b></td><td>Satu kali run ETL</td><td>run_id, started_at, files_read, rows_loaded, rows_rejected, duration_s</td></tr>
+</table></div>
+
+<div class="two"><div><h3>Contoh isi tabel production_log</h3>
+<div class="scroll"><table class="sample"><tr><th>date</th><th>station</th><th>model</th><th>input_qty</th><th>ok_qty</th><th>ng_qty</th></tr>
+<tr><td>2026-08-02</td><td>Reflow Soldering</td><td>Pro</td><td>240</td><td>231</td><td>9</td></tr>
+<tr><td>2026-08-02</td><td>Functional Test</td><td>Plus</td><td>310</td><td>302</td><td>8</td></tr></table></div>
+<p class="note">Angka karangan, bukan data asli. Kolom shift, source_file, dan row_no tidak ditampilkan agar tabel ringkas.</p></div>
+
+<div class="card"><p style="margin:0 0 6px"><b>10 stasiun perakitan</b> (berurutan):</p>
+<span class="chip">1. Solder Paste Printing</span><span class="chip">2. Component Placement</span><span class="chip">3. Reflow Soldering</span><span class="chip">4. AOI Inspection</span><span class="chip">5. Board Test (ICT)</span><span class="chip">6. Screen Assembly</span><span class="chip">7. Housing Assembly</span><span class="chip">8. Final Inspection</span><span class="chip">9. Functional Test</span><span class="chip">10. Packaging</span>
+<p style="margin:10px 0 4px"><b>Contoh aturan transform dan validasi</b> (usulan awal): nama kolom dipetakan ke nama standar per versi template; tanggal diubah ke format YYYY-MM-DD; model diseragamkan menjadi Basic, Plus, atau Pro; baris subtotal dan baris kosong dilewati; OK + NG harus sama dengan input; jumlah tidak boleh negatif; kombinasi tanggal, stasiun, model, dan shift tidak boleh dobel.</p></div></div>
+
+<h2 id="s5">5. Tools<small>Alat yang dipakai dan alasannya</small></h2>
+<div class="tools">
+<div class="card"><b>Python (pandas, openpyxl)</b><p class="r">openpyxl membaca file Excel termasuk merged cell, pandas merapikan dan menyeragamkan data. Pipeline dijalankan dengan satu perintah.</p><p class="alt">Sesuai kolom Tools di daftar portofolio (Python, SQL).</p></div>
+<div class="card"><b>DuckDB + SQL</b><p class="r">Database tujuan. Load memakai kunci unik sehingga run ulang tidak menggandakan data. SQL dipakai untuk query analitik dan rekonsiliasi.</p><p class="alt">Gratis, satu file, dan konsisten dengan project lain di portofolio ini.</p></div>
+<div class="card"><b>Pandera (opsional)</b><p class="r">Menuliskan aturan validasi sebagai schema yang rapi, sehingga aturan mudah dibaca dan diuji.</p><p class="alt">Jika tidak dipakai, aturan ditulis sebagai fungsi Python biasa.</p></div>
+<div class="card"><b>pytest + GitHub Actions</b><p class="r">Unit test untuk setiap aturan transform dan validasi, uji run ulang, dan rekonsiliasi. Dijalankan otomatis setiap ada perubahan kode.</p><p class="alt">Bukti bahwa pipeline aman diubah tanpa merusak hasil lama.</p></div>
+<div class="card"><b>Streamlit + Plotly</b><p class="r">Laporan produksi otomatis dan halaman kualitas data: load rate, reject rate per stasiun, dan isi karantina.</p><p class="alt">Semua tetap di Python dan bisa dibuka lewat link.</p></div>
+<div class="card"><b>Excel + GitHub</b><p class="r">Excel dipakai untuk cek silang total dengan file asli. GitHub menyimpan kode, aturan, dan README.</p><p class="alt">Rekan kerja bisa memverifikasi hasil dengan alat yang sudah biasa dipakai.</p></div>
+</div>
+
+<h2 id="s6">6. Work Plan<small>Setiap tahap punya warna sendiri. Label "beban besar" = langkah yang paling banyak memakan waktu</small></h2>
+<p class="how">Urutannya seperti membenahi gudang: data dulu semua barang dan kondisinya, tentukan rak dan aturan penyimpanan, pindahkan barang sambil menyisihkan yang rusak, lalu pastikan jumlah di rak sama dengan catatan.</p>
+<h3>Alur tahapan kerja</h3>
+<div class="card"><div class="wf">
+<div class="wrow"><div class="wl" style="--c:var(--navyH)"><h4>Tahap A · Perencanaan</h4><div class="ws" style="--k:2"><div class="wb"><span class="n">1</span><b>Inventaris file dan format</b><span class="s">daftar template</span></div><div class="wb"><span class="n">2</span><b>Skema target dan aturan</b><span class="s">kamus data</span></div></div></div><div class="wl" style="--c:var(--tealH)"><h4>Tahap B · Menyiapkan data</h4><div class="ws" style="--k:3"><div class="wb L"><span class="n">3</span><b>Generator log berantakan</b><span class="s">±60 file Excel</span></div><div class="wb L"><span class="n">4</span><b>Extract dan transform</b><span class="s">data seragam</span></div><div class="wb"><span class="n">5</span><b>Validasi dan load</b><span class="s">Q4, Q6</span></div></div></div></div>
+<div class="wa r"><span>↓</span></div>
+<div class="wl" style="--c:var(--plumH)"><h4>Tahap C · Menghitung dan menganalisis</h4><div class="ws rev" style="--k:5"><div class="wb"><span class="n">6</span><b>Test dan rekonsiliasi</b><span class="s">Q6, Q11, Q12</span></div><div class="wb"><span class="n">7</span><b>Profil kualitas data</b><span class="s">Q1–Q3</span></div><div class="wb"><span class="n">8</span><b>Query analitik</b><span class="s">Q7, Q8</span></div><div class="wb"><span class="n">9</span><b>Hitung dampak</b><span class="s">Q5, Q9, Q10</span></div><div class="wb"><span class="n">10</span><b>Cocokkan ground truth</b><span class="s">validasi</span></div></div></div>
+<div class="wa l"><span>↓</span></div>
+<div class="wrow1"><div class="wl" style="--c:var(--roseH)"><h4>Tahap D · Menyajikan</h4><div class="ws" style="--k:2"><div class="wb L"><span class="n">11</span><b>Laporan otomatis</b><span class="s">link dashboard</span></div><div class="wb"><span class="n">12</span><b>README dan jadwal</b><span class="s">Q13 · repositori siap</span></div></div></div></div>
+</div>
+<p class="note" style="text-align:center;margin-top:12px">Panah menunjukkan urutan pengerjaan. Angka di kotak sama dengan nomor langkah di bawah.</p></div>
+
+<div class="phases"><div class="ph" style="--ph:var(--navyH)"><p class="phase">Tahap A · Perencanaan</p>
+<ol class="steps">
+<li><b class="t">Menginventaris file dan format</b><p>Mendata versi template, nama kolom, letak header, dan kebiasaan penulisan yang ditemui di log Excel lini perakitan smartphone.</p><p class="meta">Hasil: daftar template dan masalah format · Alat: Excel, Markdown</p></li>
+<li><b class="t">Merancang skema target dan aturan</b><p>Menetapkan 4 tabel, pemetaan kolom per template, aturan transform, dan aturan validasi beserta kode alasannya.</p><p class="meta">Hasil: kamus data dan daftar aturan · Alat: Markdown</p></li>
+</ol></div>
+<div class="ph" style="--ph:var(--tealH)"><p class="phase">Tahap B · Menyiapkan data</p>
+<ol class="steps" start="3" style="counter-reset:s 2">
+<li class="L"><b class="t">Membuat generator log berantakan</b><p>Program membuat ±60 file Excel dengan 3 versi template, merged cell, subtotal, penulisan beragam, dan 2–3% nilai tidak valid.</p><p class="meta">Hasil: file Excel simulasi dan catatan ground truth · Alat: Python, openpyxl</p></li>
+<li class="L"><b class="t">Membangun extract dan transform</b><p>Membaca semua file, mengenali versi template, menemukan baris header, melewati subtotal, lalu menyeragamkan tanggal, model, shift, dan nama kolom.</p><p class="meta">Hasil: modul extract dan transform · Alat: pandas, openpyxl</p></li>
+<li><b class="t">Membangun validasi dan load</b><p>Baris yang lolos dimuat ke production_log dengan kunci unik, baris yang gagal masuk rejected_rows. Setiap run dicatat di etl_run_log (Q4, Q6).</p><p class="meta">Hasil: file database dan riwayat run · Alat: DuckDB</p></li>
+</ol></div>
+<div class="ph" style="--ph:var(--plumH)"><p class="phase">Tahap C · Menghitung dan menganalisis</p>
+<ol class="steps" style="counter-reset:s 5">
+<li><b class="t">Menulis test dan rekonsiliasi</b><p>Unit test untuk setiap aturan, uji run dua kali tanpa data ganda, uji perbaikan karantina, dan rekonsiliasi total dengan file asli (Q6, Q11, Q12).</p><p class="meta">Hasil: folder tests dan lembar rekonsiliasi · Alat: pytest, Excel</p></li>
+<li><b class="t">Membuat profil kualitas data</b><p>Menghitung jenis masalah terbanyak, data quality score per stasiun dan file, serta tren bulanan (Q1–Q3).</p><p class="meta">Hasil: tabel dan grafik kualitas data · Alat: SQL, Plotly</p></li>
+<li><b class="t">Menulis query analitik</b><p>Query output, yield, dan NG per stasiun, model, dan bulan, serta tren harian dari data yang sudah bersih (Q7, Q8).</p><p class="meta">Hasil: kumpulan query dan view · Alat: SQL</p></li>
+<li><b class="t">Menghitung dampak</b><p>Mengukur durasi run, waktu tunggu laporan, dan jam kerja yang dihemat per tahun (Q5, Q9, Q10). Semua angka diberi label estimasi.</p><p class="meta">Hasil: tabel dampak · Alat: pandas</p></li>
+<li><b class="t">Mencocokkan dengan fakta yang ditanam</b><p>Memeriksa apakah semua pola di langkah 3 tertangani atau terdeteksi, termasuk kenaikan NG di Reflow Soldering bulan ke-4.</p><p class="meta">Hasil: bagian validasi di README · Alat: Python</p></li>
+</ol></div>
+<div class="ph" style="--ph:var(--roseH)"><p class="phase">Tahap D · Menyajikan</p>
+<ol class="steps" style="counter-reset:s 10">
+<li class="L"><b class="t">Membuat laporan otomatis</b><p>Dashboard 3 halaman: Laporan Produksi, Kualitas Data, dan Karantina. Laporan selalu memakai data terbaru setelah ETL dijalankan.</p><p class="meta">Hasil: link dashboard · Alat: Streamlit, Plotly</p></li>
+<li><b class="t">Menulis README dan menyiapkan jadwal</b><p>Menulis cara kerja, hasil kualitas data, rekonsiliasi, dampak, dan cara menjalankan. Jadwal harian disiapkan sebagai opsi (Q13).</p><p class="meta">Hasil: repositori GitHub siap ditinjau · Alat: Markdown, GitHub</p></li>
+</ol></div></div>
+
+<h2 id="s7">7. Project Outputs<span class="add">Komponen tambahan</span><small>Hasil nyata yang bisa dibuka, dibaca, atau dipakai ulang setelah project selesai</small></h2>
+<p class="how">Setiap kartu adalah satu output. Label "Utama" berarti wajib dibuat, "Opsional" dibuat jika waktu tersisa. Setiap output ditujukan untuk pembaca yang berbeda.</p>
+<div class="outs"><div class="card out" style="--h:var(--navyH)"><div class="oh"><b>Pipeline ETL</b><span class="ob">Utama</span></div><ul><li>Satu perintah untuk membaca, merapikan, memvalidasi, dan memuat semua file.</li><li>Aman dijalankan ulang tanpa data ganda.</li><li>Bentuk: paket Python dengan perintah CLI.</li><li>Untuk: engineer yang menyusun laporan produksi.</li></ul></div><div class="card out" style="--h:var(--roseH)"><div class="oh"><b>Laporan produksi otomatis</b><span class="ob">Utama</span></div><ul><li>Output, yield, NG per stasiun, model, dan bulan, beserta tren harian.</li><li>Halaman kualitas data dan isi karantina.</li><li>Bentuk: link dashboard Streamlit.</li><li>Untuk: supervisor dan manajemen.</li></ul></div><div class="card out" style="--h:var(--tealH)"><div class="oh"><b>Database &amp; query SQL</b><span class="ob">Utama</span></div><ul><li>4 tabel di DuckDB, termasuk staging dan karantina.</li><li>Setiap angka bisa ditelusuri ke file dan baris asal.</li><li>Bentuk: folder sql/ dan file database.</li><li>Untuk: analis lain dan project lanjutan.</li></ul></div><div class="card out" style="--h:var(--plumH)"><div class="oh"><b>Laporan kualitas data</b><span class="ob">Utama</span></div><ul><li>Jenis masalah, data quality score per stasiun dan file, serta tren bulanan.</li><li>Dasar untuk memperbaiki template di lapangan.</li><li>Bentuk: notebook dan CSV.</li><li>Untuk: pemilik proses dan tim yang mengisi log.</li></ul></div><div class="card out" style="--h:var(--skyH)"><div class="oh"><b>Generator log berantakan</b><span class="ob">Utama</span></div><ul><li>Membuat file Excel dengan masalah format yang realistis.</li><li>Hasilnya selalu sama karena memakai seed.</li><li>Bentuk: skrip .py.</li><li>Untuk: menguji pipeline dengan skenario baru.</li></ul></div><div class="card out" style="--h:var(--amberH)"><div class="oh"><b>Test suite &amp; rekonsiliasi</b><span class="ob">Utama</span></div><ul><li>Test untuk setiap aturan, uji run ulang, dan rekonsiliasi total.</li><li>Berjalan otomatis di GitHub Actions.</li><li>Bentuk: folder tests/ dan workflow .yml.</li><li>Untuk: reviewer teknis yang menilai keandalan pipeline.</li></ul></div><div class="card out" style="--h:var(--navyH)"><div class="oh"><b>Laporan temuan &amp; rekomendasi</b><span class="ob">Utama</span></div><ul><li>Masalah data terbanyak, rekomendasi perbaikan template, dan estimasi jam dihemat.</li><li>Angka dampak diberi label estimasi.</li><li>Bentuk: README di GitHub.</li><li>Untuk: semua pembaca, sebagai pintu masuk project.</li></ul></div><div class="card out" style="--h:var(--tealH)"><div class="oh"><b>Jadwal ETL harian</b><span class="ob opt">Opsional</span></div><ul><li>ETL berjalan otomatis setiap hari saat file baru masuk.</li><li>Bentuk: Task Scheduler atau workflow GitHub Actions.</li><li>Untuk: tim yang ingin laporan selalu terbaru.</li></ul></div></div>
+
+<h3>Daftar dokumen yang akan dihasilkan</h3>
+<p class="how">Nama file adalah usulan awal dan bisa disesuaikan. Tabel diurutkan menurut tahap pengerjaan (A sampai D). File Excel simulasi dan file database tidak di-commit karena bisa dibuat ulang dari skrip.</p>
+<div class="scroll"><table class="docs"><tr><th>Nama dokumen</th><th>Isi</th><th>Tahap</th><th>Label</th></tr>
+<tr><td><code>docs/template_inventory.md</code></td><td>Versi template, nama kolom, dan masalah format</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>docs/data_dictionary.md</code></td><td>Kamus data dan hubungan 4 tabel</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>config/column_mapping.yml</code></td><td>Pemetaan kolom per versi template</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>docs/validation_rules.md</code></td><td>Aturan transform dan validasi beserta kode alasan</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>scripts/generate_messy_logs.py</code></td><td>Pembuat log Excel berantakan (seed tetap)</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>data/raw_excel/</code></td><td>File Excel simulasi. Tidak di-commit, dibuat ulang dari skrip</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>data/ground_truth.json</code></td><td>Catatan pola yang sengaja ditanam</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>etl/extract.py</code></td><td>Membaca file dan mengenali template</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>etl/transform.py</code></td><td>Menyeragamkan tanggal, model, shift, dan kolom</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>etl/validate_load.py</code></td><td>Validasi, karantina, dan load ke DuckDB</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>production.duckdb</code></td><td>File database. Tidak di-commit, dibuat ulang dari pipeline</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>tests/</code></td><td>Unit test aturan, uji run ulang, dan rekonsiliasi</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>.github/workflows/ci.yml</code></td><td>Menjalankan test otomatis</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>outputs/reconciliation.xlsx</code></td><td>Cek silang total database vs file asli</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>sql/</code></td><td>Query analitik dan kualitas data</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>notebooks/data_quality.ipynb</code></td><td>Profil kualitas data dan dampak</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>dashboard/app.py</code></td><td>Laporan otomatis Streamlit (3 halaman)</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>requirements.txt</code></td><td>Daftar library Python yang dibutuhkan</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>README.md</code></td><td>Cara kerja, temuan, dampak, batasan, dan cara menjalankan</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>index.html</code></td><td>Halaman rancangan project ini (GitHub Pages)</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>.github/workflows/daily_etl.yml</code></td><td>Jadwal ETL harian</td><td>Tahap D</td><td><span class="ob opt">Opsional</span></td></tr>
+</table></div>
+
+<h2 id="s8">8. Success Criteria<span class="add">Komponen tambahan</span><small>Kapan project dianggap selesai dan berhasil</small></h2>
+<div class="card"><h3>Project dianggap berhasil jika</h3>
+<ul class="tight">
+<li>Kedelapan pertanyaan berlabel "Utama" terjawab dengan angka dari data.</li>
+<li>Rekonsiliasi cocok: total input, OK, dan NG di database ditambah karantina sama persis dengan total di file Excel asli.</li>
+<li>Menjalankan ETL dua kali menghasilkan jumlah baris yang sama, tanpa data ganda.</li>
+<li>Semua pola yang ditanam tertangani atau terdeteksi, dan semua test lulus di GitHub Actions.</li>
+<li>Satu run untuk ±60 file selesai dalam waktu kurang dari 1 menit, dan orang awam bisa membaca laporan produksi dalam waktu kurang dari 1 menit.</li>
+<li>Checklist standar terpenuhi: pertanyaan bisnis, data cleaning, analisis SQL, dashboard ter-deploy, README berisi insight dan rekomendasi.</li>
+</ul></div>
+
+<h2 id="s9">9. Assumptions &amp; Limitations<span class="add">Komponen tambahan</span><small>Keputusan yang sudah diambil dan hal yang perlu diwaspadai</small></h2>
+<div class="two"><div><details open><summary>Tools: DuckDB + Streamlit + Plotly <span class="pill">Sudah Anda setujui</span></summary><p>Konsisten dengan project lain. Kolom Tools di daftar portofolio hanya menulis Python dan SQL, sehingga DuckDB dan Streamlit sebaiknya ditambahkan.</p></details>
+<details><summary>Jenis data: simulasi <span class="pill d">Usulan awal</span></summary><p>Sesuai kolom Sumber data di daftar portofolio. File Excel dibuat dengan program dan meniru masalah format di lini perakitan smartphone. Angka hasil akhir membuktikan pipeline bekerja, bukan menggambarkan kondisi pabrik sebenarnya.</p></details></div>
+<div><details><summary>Ruang lingkup <span class="pill d">Usulan awal</span></summary><p>10 stasiun perakitan smartphone, model Basic, Plus, dan Pro, 2 shift, ±6 bulan, 3 versi template. Baris yang gagal validasi dikarantina, bukan diperbaiki otomatis. Dampak dihitung dalam jam kerja, belum dalam rupiah.</p></details>
+<details><summary>Hal yang perlu diwaspadai <span class="pill d">Usulan awal</span></summary>
+<p><b>File asli lebih beragam.</b> Log Excel di lapangan bisa memiliki masalah yang tidak ada di simulasi. Pemetaan kolom disimpan di file konfigurasi agar mudah ditambah.</p>
+<p><b>Perbaikan otomatis bisa keliru.</b> Menebak nilai yang salah bisa membuat data tampak benar padahal tidak. Karena itu baris bermasalah dikarantina dan diputuskan manusia.</p>
+<p><b>Estimasi waktu.</b> Menit per laporan sebelum ETL adalah asumsi. Angka sebenarnya sebaiknya diukur dengan stopwatch pada beberapa laporan.</p>
+<p><b>Pola belum tentu penyebab.</b> Kenaikan NG di Reflow Soldering baru pola. Penyebabnya perlu dicek di lapangan, dan pengujian statistik dikerjakan di Project 29.</p></details></div></div>
+</main>
+
+
+<script>
+const $=id=>document.getElementById(id),MAXM=45;
+const E=[["Kumpulkan file",25,1],["Salin dan gabung",40,0],["Rapikan format",35,0],["Cek salah ketik",30,5],["Hitung KPI",20,0],["Buat grafik",20,2]];
+const on=E.map(()=>true);
+function draw(){const n=+$('sl').value,af=E.map((e,i)=>on[i]?e[2]:e[1]),m0=E.reduce((s,e)=>s+e[1],0),m1=af.reduce((s,x)=>s+x,0),jam=Math.round((m0-m1)*n*12/60),k=on.filter(Boolean).length;
+$('slo').textContent=n;
+$('bars').innerHTML=E.map((e,i)=>`<button type="button" class="row${on[i]?' sel':''}" data-i="${i}" aria-pressed="${on[i]}"><span class="n">${e[0]}</span><span class="tr"><span class="g" style="width:${e[1]/MAXM*100}%"></span><span class="b" style="width:${af[i]/MAXM*100}%"></span></span><span class="c">${af[i]} mnt</span><span class="tg">${on[i]?'otomatis':'manual'}</span></button>`).join('');
+$('r1').textContent=m0+' menit';$('r2').textContent=m1+' menit';$('r3').textContent=jam.toLocaleString('id-ID')+' jam';
+$('ins').innerHTML=n==0?'Jika tidak ada laporan yang disusun, tidak ada jam kerja yang dihemat. Geser slider untuk mengatur jumlah laporan per bulan.':`Dengan ${k} dari ${E.length} langkah otomatis, satu laporan turun dari <b>${m0} menit</b> menjadi <b>${m1} menit</b>. Untuk ${n} laporan per bulan, sekitar <b>${jam.toLocaleString('id-ID')} jam kerja per tahun</b> bisa dihemat. Sisa waktu terbesar ada di "${E.map((e,i)=>[e[0],af[i]]).sort((a,b)=>b[1]-a[1])[0][0]}". Angka contoh, bukan hasil dari data.`}
+$('bars').onclick=e=>{const r=e.target.closest('.row');if(r){const i=+r.dataset.i;on[i]=!on[i];draw()}};$('sl').oninput=draw;draw();
+const G=[["ETL","","Extract, Transform, Load: membaca data dari sumber, merapikannya, lalu memuatnya ke database."],["pipeline","i","Rangkaian langkah otomatis dari membaca file sampai data siap dianalisis."],["Extract","","Tahap membaca data dari file sumber, di sini file Excel."],["Transform","","Tahap merapikan dan menyeragamkan data, misalnya format tanggal dan nama model."],["load","i","Tahap memuat data yang sudah rapi ke database."],["karantina","i","Tempat menyimpan baris yang gagal validasi beserta alasannya, agar tidak hilang dan bisa diperbaiki."],["validasi","i","Pengecekan otomatis apakah setiap baris memenuhi aturan, misalnya OK + NG sama dengan input."],["staging","i","Tabel sementara berisi data mentah apa adanya sebelum dirapikan."],["load rate","i","Persentase baris yang berhasil dimuat ke database.\nRumus: load rate = baris dimuat ÷ total baris data.\nContoh: 6.860 dari 7.000 baris, load rate = 98%."],["reject rate","i","Persentase baris yang masuk karantina.\nRumus: reject rate = baris ditolak ÷ total baris data.\nContoh: 140 dari 7.000 baris, reject rate = 2%."],["data quality score","i","Skor kerapian data per stasiun atau file.\nRumus: data quality score = baris tanpa masalah ÷ total baris × 100.\nContoh: 485 dari 500 baris bersih, skor = 97."],["waktu proses","i","Lama satu kali run ETL dari membaca file sampai data dimuat.\nRumus: waktu selesai − waktu mulai, dicatat di etl_run_log."],["jam dihemat","i","Waktu kerja yang tidak lagi dipakai untuk menyusun laporan manual.\nRumus: jam dihemat = (menit manual − menit ETL) × laporan per tahun ÷ 60.\nContoh: (170 − 8) × 96 ÷ 60 ≈ 259 jam."],["rekonsiliasi","i","Mencocokkan total di database dengan total di file asli untuk memastikan tidak ada data yang hilang atau ganda.\nRumus: total database + total karantina = total file asli."],["idempotent","i","Sifat proses yang memberi hasil sama walaupun dijalankan berkali-kali, tanpa menggandakan data."],["merged cell","i","Beberapa sel Excel yang digabung menjadi satu, sering dipakai untuk judul tetapi menyulitkan program membaca data."],["template","i","Format standar file Excel: urutan dan nama kolom yang dipakai operator."],["yield","i","Persentase produk yang lolos dibanding produk yang masuk.\nRumus: yield = OK ÷ input."],["NG","","Not Good: produk yang gagal pemeriksaan."],["OK","","Produk yang lolos pemeriksaan."],["KPI","","Key Performance Indicator: angka kunci untuk menilai kinerja, misalnya yield."],["shift","i","Pembagian jam kerja, misalnya shift pagi dan shift malam."],["SQL","","Bahasa untuk meminta dan mengolah data dari tabel database."],["DuckDB","","Database ringan dalam satu file, untuk menjalankan SQL tanpa server."],["openpyxl","","Library Python untuk membaca dan menulis file Excel, termasuk merged cell."],["pandas","","Library Python untuk mengolah data tabel."],["Pandera","","Library Python untuk menuliskan aturan validasi data sebagai schema."],["pytest","","Alat untuk menjalankan unit test di Python."],["unit test","i","Kode kecil yang menguji satu fungsi secara otomatis."],["GitHub Actions","i","Fitur GitHub yang menjalankan program otomatis saat kode berubah atau sesuai jadwal."],["dashboard","i","Halaman ringkasan interaktif berisi grafik dan angka kunci."],["Streamlit","","Alat untuk membuat dashboard web memakai Python."],["CLI","","Command Line Interface: program yang dijalankan dengan mengetik perintah."],["ground truth","i","Pola yang sengaja ditanam di data simulasi untuk memeriksa apakah pipeline berhasil menanganinya."],["data simulasi","i","Data buatan komputer yang meniru kondisi nyata, bukan hasil pencatatan di pabrik."],["seed","i","Angka kunci pengacak. Dengan seed yang sama, data acak yang sama bisa dibuat ulang."],["kamus data","i","Dokumen yang menjelaskan arti, satuan, dan contoh isi setiap kolom."],["README","","Dokumen penjelasan project yang dibaca pertama kali di repositori GitHub."],["view","i","Query SQL yang disimpan dengan nama, sehingga bisa dipanggil seperti tabel."],["rata-rata bergerak 7 hari","i","Rata-rata 7 hari terakhir yang dihitung ulang setiap hari, agar tren tidak terlalu naik-turun."]];
+
+const TERMS=G.map(([t,f,d])=>({t,d,re:new RegExp('(?<![\\w.-])'+t.replace(/[.*+?^${}()|[\]\\-]/g,'\\$&')+'(?![\\w-])',f)}));
+const SK='svg,.row,.fx,.fbar,.oh,.wb,table td:first-child,h1,h2,h3,nav,button,script,style,summary,.tm,.tag,.pri,.pill,.v,.l,.chip,.flow,th,#tip,.banner,.theme,.phase,.add,.tools b,b.t,code';
+function wrapT(n,seen){let b=null;for(const x of TERMS){if(seen.has(x.t))continue;const m=x.re.exec(n.data);if(m&&(!b||m.index<b.i||(m.index==b.i&&m[0].length>b.l)))b={x,i:m.index,l:m[0].length}}
+if(!b)return;seen.add(b.x.t);const r=n.splitText(b.i),a=r.splitText(b.l),s=document.createElement('span');s.className='tm';s.tabIndex=0;s.dataset.d=b.x.d;s.textContent=r.data;r.replaceWith(s);wrapT(a,seen)}
+function hl(root,seen){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest(SK)?3:1}),ns=[];while(w.nextNode())ns.push(w.currentNode);ns.forEach(n=>wrapT(n,seen))}
+const tip=document.createElement('div');tip.id='tip';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+function showT(e){tip.textContent=e.dataset.d;tip.style.display='block';const r=e.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+'px';tip.style.top=(r.bottom+h+12>innerHeight?r.top-h-6:r.bottom+6)+'px'}
+document.addEventListener('click',ev=>{const t=ev.target.closest('.tm');t?showT(t):tip.style.display='none'});
+document.addEventListener('mouseover',ev=>{const t=ev.target.closest('.tm');if(t)showT(t)});
+document.addEventListener('mouseout',ev=>{if(ev.target.closest&&ev.target.closest('.tm'))tip.style.display='none'});
+document.addEventListener('focusin',ev=>{const t=ev.target.closest&&ev.target.closest('.tm');if(t)showT(t)});
+addEventListener('scroll',()=>tip.style.display='none',{passive:true});
+const qg=$('qg');document.querySelector('.fbar').onclick=e=>{const b=e.target.closest('.fb');if(!b)return;const f=b.dataset.f;
+document.querySelectorAll('.fb').forEach(x=>x.classList.toggle('on',x==b));let th=null,vis=0;
+[...qg.children].forEach(el=>{if(el.classList.contains('theme')){if(th)th.hidden=!vis;th=el;vis=0}else{const show=f=='*'||el.dataset.p==f;el.hidden=!show;if(show)vis++}});if(th)th.hidden=!vis};
+let seen=new Set();[...document.querySelector('main').children].forEach(el=>{if(el.tagName=='H2')seen=new Set();hl(el,seen)});
+</script>
+</body></html>
