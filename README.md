@@ -19,7 +19,7 @@ Halaman rancangan: https://bagusbernadi.github.io/Project-33-Automated-Excel-to-
 Bagaimana mengubah log operator yang berantakan menjadi data siap analisis?
 
 ## 2. Data
-- Data simulasi buatan sendiri, dibuat oleh `scripts/generate_messy_logs.py` (Versi: v1, rancangan; Tanggal dibuat: saat Tahap B dikerjakan).
+- Data simulasi buatan sendiri, dibuat oleh `scripts/generate_messy_logs.py` (Versi: v1; Tanggal dibuat: 28 Okt 2026; Seed: 33260302).
 - 10 stasiun perakitan smartphone, 3 model (Basic, Plus, Pro), 2 shift, ±6 bulan, ±60 file Excel dengan 3 versi template. Perkiraan ±7.000 baris produksi.
 - Tidak memakai data perusahaan.
 
