@@ -1,0 +1,11 @@
+check,n_compared,max_abs_diff,status
+"Output, yield, NG per stasiun, model, bulan (Q7)",1080,4.934e-07,PASS
+Yield per stasiun (Q7),40,4.382e-07,PASS
+Yield per model (Q7),12,3.905e-07,PASS
+Yield per bulan (Q7),24,3.939e-07,PASS
+Tren harian dan rata-rata bergerak 7 hari (Q8),840,4.963e-07,PASS
+Data quality score per file (Q2),300,3.31e-08,PASS
+Data quality score per bulan (Q3),12,3.31e-08,PASS
+Baris ditolak per aturan (Q1),4,0.0,PASS
+"Jumlah baris dimuat + ditolak = baris dibaca, tiap run (Q4)",4,0.0,PASS
+Baris production_log = baris staging - baris ditolak,1,0.0,PASS

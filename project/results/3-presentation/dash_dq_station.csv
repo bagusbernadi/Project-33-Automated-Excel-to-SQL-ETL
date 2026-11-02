@@ -1,0 +1,11 @@
+ord,station,rows_total,rows_clean,rows_fixed,rows_rejected,dq_score,reject_rate
+1,Solder Paste Printing,726,684,12,30,94.214876,0.041322
+2,Component Placement,726,684,12,30,94.214876,0.041322
+3,Reflow Soldering,726,684,12,30,94.214876,0.041322
+4,AOI Inspection,726,684,12,30,94.214876,0.041322
+5,Board Test (ICT),726,684,12,30,94.214876,0.041322
+6,Screen Assembly,726,684,12,30,94.214876,0.041322
+7,Housing Assembly,726,684,12,30,94.214876,0.041322
+8,Final Inspection,726,684,12,30,94.214876,0.041322
+9,Functional Test,726,684,12,30,94.214876,0.041322
+10,Packaging,726,684,12,30,94.214876,0.041322

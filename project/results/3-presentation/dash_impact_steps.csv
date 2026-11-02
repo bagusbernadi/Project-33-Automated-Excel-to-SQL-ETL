@@ -1,0 +1,7 @@
+langkah,menit_manual,menit_setelah_etl,menit_dihemat
+Kumpulkan file,25,1,24
+Salin dan gabung,40,0,40
+Rapikan format,35,0,35
+Cek salah ketik,30,5,25
+Hitung KPI,20,0,20
+Buat grafik,20,2,18

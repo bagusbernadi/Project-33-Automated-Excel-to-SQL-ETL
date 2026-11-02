@@ -1,0 +1,61 @@
+station,month,ng_rate,input_qty
+Solder Paste Printing,2026-03,0.012924,47662
+Solder Paste Printing,2026-04,0.012885,47961
+Solder Paste Printing,2026-05,0.011722,47687
+Solder Paste Printing,2026-06,0.0122,47952
+Solder Paste Printing,2026-07,0.013028,47974
+Solder Paste Printing,2026-08,0.012124,48498
+Component Placement,2026-03,0.011399,47985
+Component Placement,2026-04,0.011274,47633
+Component Placement,2026-05,0.0106,48394
+Component Placement,2026-06,0.012199,47872
+Component Placement,2026-07,0.011877,47569
+Component Placement,2026-08,0.010753,48172
+Reflow Soldering,2026-03,0.043868,47962
+Reflow Soldering,2026-04,0.040653,47746
+Reflow Soldering,2026-05,0.043052,48012
+Reflow Soldering,2026-06,0.042589,47665
+Reflow Soldering,2026-07,0.043667,47908
+Reflow Soldering,2026-08,0.039865,48062
+AOI Inspection,2026-03,0.0088,47728
+AOI Inspection,2026-04,0.00852,48123
+AOI Inspection,2026-05,0.007727,47626
+AOI Inspection,2026-06,0.00844,47633
+AOI Inspection,2026-07,0.007721,48569
+AOI Inspection,2026-08,0.008173,48209
+Board Test (ICT),2026-03,0.013218,47812
+Board Test (ICT),2026-04,0.013377,47619
+Board Test (ICT),2026-05,0.013406,48335
+Board Test (ICT),2026-06,0.014595,48098
+Board Test (ICT),2026-07,0.012919,47451
+Board Test (ICT),2026-08,0.012436,48246
+Screen Assembly,2026-03,0.010338,48076
+Screen Assembly,2026-04,0.009719,47637
+Screen Assembly,2026-05,0.010214,48269
+Screen Assembly,2026-06,0.010597,47561
+Screen Assembly,2026-07,0.011044,47539
+Screen Assembly,2026-08,0.010026,48075
+Housing Assembly,2026-03,0.015351,47945
+Housing Assembly,2026-04,0.014196,47619
+Housing Assembly,2026-05,0.015978,47566
+Housing Assembly,2026-06,0.016176,47973
+Housing Assembly,2026-07,0.015334,47737
+Housing Assembly,2026-08,0.01527,48396
+Final Inspection,2026-03,0.012825,47796
+Final Inspection,2026-04,0.012735,47977
+Final Inspection,2026-05,0.012228,47761
+Final Inspection,2026-06,0.012505,48139
+Final Inspection,2026-07,0.012824,47567
+Final Inspection,2026-08,0.012066,48236
+Functional Test,2026-03,0.021756,47481
+Functional Test,2026-04,0.020542,48146
+Functional Test,2026-05,0.019464,48396
+Functional Test,2026-06,0.019922,48189
+Functional Test,2026-07,0.019814,48350
+Functional Test,2026-08,0.021727,47682
+Packaging,2026-03,0.002822,47841
+Packaging,2026-04,0.003318,47920
+Packaging,2026-05,0.003191,47953
+Packaging,2026-06,0.003096,47802
+Packaging,2026-07,0.003336,47956
+Packaging,2026-08,0.003376,48276

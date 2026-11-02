@@ -1,3 +1,9 @@
-data/*
-!data/README.md
+# data mentah dan database tidak di-commit (dibuat ulang dari skrip)
+project/data/raw/
+project/data/clean/
+project/*.duckdb
+project/*.duckdb.wal
 __pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/

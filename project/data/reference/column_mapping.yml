@@ -1,0 +1,27 @@
+# Pemetaan kolom per versi template log Excel (dibaca oleh etl/extract.py).
+# Menambah template baru cukup menambah blok di bawah; kode tidak perlu diubah.
+stations:                 # nomor stasiun pada nama file log_NN_*.xlsx -> nama stasiun
+  "01": Solder Paste Printing
+  "02": Component Placement
+  "03": Reflow Soldering
+  "04": AOI Inspection
+  "05": Board Test (ICT)
+  "06": Screen Assembly
+  "07": Housing Assembly
+  "08": Final Inspection
+  "09": Functional Test
+  "10": Packaging
+header_first_cells: [tanggal, tgl, date]      # sel pertama baris header (tanpa membedakan huruf besar kecil)
+skip_first_cells: [total, subtotal, jumlah]   # baris ringkasan yang dilewati
+templates:                # urutan penting: tanda pengenal pertama yang cocok dipakai
+  v3:
+    detect_header_has: ["OK/NG"]
+    columns: {Date: date, Shift: shift, Model: model, Operator: operator_id, Input: input_qty, "OK/NG": ok_ng}
+  v2:
+    detect_header_has: ["Catatan"]
+    columns: {Tgl: date, Shift: shift, Model: model, Operator: operator_id, Input: input_qty, OK: ok_qty, NG: ng_qty, Catatan: note}
+  v1:
+    detect_header_has: []                      # cadangan: header lain
+    columns: {Tanggal: date, Shift: shift, Model: model, Operator: operator_id, Input: input_qty, OK: ok_qty, NG: ng_qty}
+date_formats: ["%Y-%m-%d", "%Y/%m/%d", "%d-%b-%y", "%d/%m/%y", "%d/%m/%Y"]
+model_aliases: {basic: Basic, basik: Basic, plus: Plus, pro: Pro}   # setelah huruf kecil, spasi dan titik di ujung dibuang, awalan "model " dibuang

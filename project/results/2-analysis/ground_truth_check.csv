@@ -1,0 +1,6 @@
+fact_no,fakta,ditemukan,hasil
+1,"Tiga versi template, termasuk satu template khusus AOI Inspection","3 versi template ditemukan (v1 20 file, v2 20 file, v3 20 file), semuanya terbaca otomatis dari pemetaan kolom. Versi berganti per bulan, bukan per stasiun, jadi tidak ada template khusus AOI Inspection",Sebagian
+2,"Format tanggal campuran: 02/08/2026, 2026-08-02, dan angka serial Excel","5 format tanggal ditemukan (datetime: 2420, dd/mm/yy: 2420, dd-Mon-yy: 820, yyyy/mm/dd: 800, yyyy-mm-dd: 800); semua terbaca. Angka serial Excel tidak ada di data (0 baris)",Sebagian
+3,"Nama model beragam: Pro, PRO, pro, dan Model Pro","60 baris bernama model tidak baku ('PRO.', 'basik', 'plus '), semuanya dinormalkan dengan benar (60 dari 60 sama dengan data asal). Variasi Model Pro, pro tidak ada di data",Sebagian
+4,"Merged cell di judul, baris subtotal, dan baris kosong di tengah data","20 file dengan merged cell, 20 baris TOTAL, 80 baris kosong, dan 120 baris judul semuanya dilewati; 0 baris data hilang (rekonsiliasi 60 dari 60 file cocok)",Sesuai
+5,Sekitar 2 sampai 3% nilai tidak valid; NG Reflow Soldering naik di bulan ke-4,"420 masalah tertanam (5.8% baris), 300 perlu karantina dan semuanya ditemukan (300 baris ditolak = 4.1%); 120 masalah format diperbaiki. Kenaikan NG Reflow bulan ke-4 tidak ditanam: rate Juni 1.01 kali rata-rata lima bulan lain",Sebagian

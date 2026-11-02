@@ -1,0 +1,61 @@
+source_file,station,month,template_version,rows_total,rows_clean,rows_fixed,rows_rejected,dq_score,reject_rate
+log_01_solder_2026-03.xlsx,Solder Paste Printing,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_01_solder_2026-04.xlsx,Solder Paste Printing,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_01_solder_2026-05.xlsx,Solder Paste Printing,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_01_solder_2026-06.xlsx,Solder Paste Printing,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_01_solder_2026-07.xlsx,Solder Paste Printing,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_01_solder_2026-08.xlsx,Solder Paste Printing,2026-08,v3,121,114,2,5,94.214876,0.041322
+log_02_component_2026-03.xlsx,Component Placement,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_02_component_2026-04.xlsx,Component Placement,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_02_component_2026-05.xlsx,Component Placement,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_02_component_2026-06.xlsx,Component Placement,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_02_component_2026-07.xlsx,Component Placement,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_02_component_2026-08.xlsx,Component Placement,2026-08,v3,121,114,2,5,94.214876,0.041322
+log_03_reflow_2026-03.xlsx,Reflow Soldering,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_03_reflow_2026-04.xlsx,Reflow Soldering,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_03_reflow_2026-05.xlsx,Reflow Soldering,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_03_reflow_2026-06.xlsx,Reflow Soldering,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_03_reflow_2026-07.xlsx,Reflow Soldering,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_03_reflow_2026-08.xlsx,Reflow Soldering,2026-08,v3,121,114,2,5,94.214876,0.041322
+log_04_aoi_2026-03.xlsx,AOI Inspection,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_04_aoi_2026-04.xlsx,AOI Inspection,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_04_aoi_2026-05.xlsx,AOI Inspection,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_04_aoi_2026-06.xlsx,AOI Inspection,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_04_aoi_2026-07.xlsx,AOI Inspection,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_04_aoi_2026-08.xlsx,AOI Inspection,2026-08,v3,121,114,2,5,94.214876,0.041322
+log_05_board_2026-03.xlsx,Board Test (ICT),2026-03,v1,121,114,2,5,94.214876,0.041322
+log_05_board_2026-04.xlsx,Board Test (ICT),2026-04,v1,121,114,2,5,94.214876,0.041322
+log_05_board_2026-05.xlsx,Board Test (ICT),2026-05,v2,121,114,2,5,94.214876,0.041322
+log_05_board_2026-06.xlsx,Board Test (ICT),2026-06,v2,121,114,2,5,94.214876,0.041322
+log_05_board_2026-07.xlsx,Board Test (ICT),2026-07,v3,121,114,2,5,94.214876,0.041322
+log_05_board_2026-08.xlsx,Board Test (ICT),2026-08,v3,121,114,2,5,94.214876,0.041322
+log_06_screen_2026-03.xlsx,Screen Assembly,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_06_screen_2026-04.xlsx,Screen Assembly,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_06_screen_2026-05.xlsx,Screen Assembly,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_06_screen_2026-06.xlsx,Screen Assembly,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_06_screen_2026-07.xlsx,Screen Assembly,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_06_screen_2026-08.xlsx,Screen Assembly,2026-08,v3,121,114,2,5,94.214876,0.041322
+log_07_housing_2026-03.xlsx,Housing Assembly,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_07_housing_2026-04.xlsx,Housing Assembly,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_07_housing_2026-05.xlsx,Housing Assembly,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_07_housing_2026-06.xlsx,Housing Assembly,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_07_housing_2026-07.xlsx,Housing Assembly,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_07_housing_2026-08.xlsx,Housing Assembly,2026-08,v3,121,114,2,5,94.214876,0.041322
+log_08_final_2026-03.xlsx,Final Inspection,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_08_final_2026-04.xlsx,Final Inspection,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_08_final_2026-05.xlsx,Final Inspection,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_08_final_2026-06.xlsx,Final Inspection,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_08_final_2026-07.xlsx,Final Inspection,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_08_final_2026-08.xlsx,Final Inspection,2026-08,v3,121,114,2,5,94.214876,0.041322
+log_09_functional_2026-03.xlsx,Functional Test,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_09_functional_2026-04.xlsx,Functional Test,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_09_functional_2026-05.xlsx,Functional Test,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_09_functional_2026-06.xlsx,Functional Test,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_09_functional_2026-07.xlsx,Functional Test,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_09_functional_2026-08.xlsx,Functional Test,2026-08,v3,121,114,2,5,94.214876,0.041322
+log_10_packaging_2026-03.xlsx,Packaging,2026-03,v1,121,114,2,5,94.214876,0.041322
+log_10_packaging_2026-04.xlsx,Packaging,2026-04,v1,121,114,2,5,94.214876,0.041322
+log_10_packaging_2026-05.xlsx,Packaging,2026-05,v2,121,114,2,5,94.214876,0.041322
+log_10_packaging_2026-06.xlsx,Packaging,2026-06,v2,121,114,2,5,94.214876,0.041322
+log_10_packaging_2026-07.xlsx,Packaging,2026-07,v3,121,114,2,5,94.214876,0.041322
+log_10_packaging_2026-08.xlsx,Packaging,2026-08,v3,121,114,2,5,94.214876,0.041322

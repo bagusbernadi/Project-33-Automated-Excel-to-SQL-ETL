@@ -1,9 +1,9 @@
 """Project 33: log Excel operator yang berantakan (simulasi, perakitan smartphone), 3 versi template. Seed tetap.
 
 60 file = 10 stasiun x 6 bulan; 120 hari kerja (20 per bulan) x 3 model x 2 shift = 7.200 baris produksi bersih.
-Template v1 (bulan 1-2), v2 (bulan 3-4), v3 (bulan 5-6). Hasil (data/sim/): logs/*.xlsx, truth_production.csv (bersih),
+Template v1 (bulan 1-2), v2 (bulan 3-4), v3 (bulan 5-6). Hasil (project/data/raw/): logs/*.xlsx, truth_production.csv (bersih),
 ground_truth_issues.csv (masalah tertanam per file/baris), ground_truth.json.
-Jalankan: python scripts/generate_messy_logs.py   (versi data: v1; butuh openpyxl)
+Jalankan dari folder project/: python code/1-data-preparation/python/01_generate_messy_logs.py   (versi data: v1; butuh openpyxl)
 """
 import io
 import json
@@ -15,8 +15,8 @@ import numpy as np
 import pandas as pd
 from openpyxl import Workbook
 
-ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "data" / "sim"
+ROOT = Path(__file__).resolve().parents[3]          # folder project/
+OUT = ROOT / "data" / "raw"                              # tidak di-commit (versi data v1: sebelumnya data/sim/)
 SEED = 33260302
 DATA_VERSION = "v1"
 STATIONS = ["Solder Paste Printing", "Component Placement", "Reflow Soldering", "AOI Inspection",

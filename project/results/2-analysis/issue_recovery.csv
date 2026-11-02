@@ -1,0 +1,9 @@
+jenis_masalah,ditanam,ditangani_benar,tindakan_diharapkan,pct
+model_typo,60,60,dimuat dengan nilai benar,1.0
+text_qty,60,60,dimuat dengan nilai benar,1.0
+blank_cell,60,60,dikarantina R01,1.0
+negative_qty,60,60,dikarantina R03,1.0
+ok_ng_mismatch,60,60,dikarantina R04,1.0
+formula_overwrite,60,60,dikarantina R04,1.0
+duplicate_row,60,60,"baris asli dimuat, salinan dikarantina R05",1.0
+baris tanpa masalah (positif palsu),6780,6780,dimuat dengan nilai sama persis dengan data bersih asal,1.0

@@ -1,0 +1,4 @@
+station,date,input_qty,ng_qty,ng_rate,mean_ng_rate,sd_ng_rate,z
+Packaging,2026-07-09,2465,19,0.007708,0.00319,0.001085,4.161721
+Functional Test,2026-03-06,2429,73,0.030054,0.020517,0.002985,3.194537
+Component Placement,2026-07-02,2391,44,0.018402,0.011327,0.002278,3.106444

@@ -1,0 +1,22 @@
+test,expected,actual,status
+A. Run ke-3: baris baru masuk production_log,0,0,PASS
+A. Run ke-3: isi tabel stg_raw_rows (jumlah dan checksum) tidak berubah,"(7260, '7d2dd25ea1074886bd8541f509ce84a1')","(7260, '7d2dd25ea1074886bd8541f509ce84a1')",PASS
+A. Run ke-3: isi tabel rejected_rows (jumlah dan checksum) tidak berubah,"(360, 'e38b7b6ee5b0284ac68c49a8c66697bd')","(360, 'e38b7b6ee5b0284ac68c49a8c66697bd')",PASS
+A. Run ke-3: isi tabel production_log (jumlah dan checksum) tidak berubah,"(6960, '8892f1812ac36cd32525eb884a6fcf12')","(6960, '8892f1812ac36cd32525eb884a6fcf12')",PASS
+A. Run ke-3: baris etl_run_log bertambah satu,3,3,PASS
+B. 100 baris dihapus: production_log berkurang,6860,6860,PASS
+B. Run ulang memulihkan tepat 100 baris,100,100,PASS
+B. Isi production_log kembali sama (kecuali nomor run),"(6960, '8892f1812ac36cd32525eb884a6fcf12')","(6960, '8892f1812ac36cd32525eb884a6fcf12')",PASS
+C. Baris karantina yang bisa diperbaiki (bukan salinan ganda),240,240,PASS
+"C. Salinan baris ganda (dibuang, tidak diperbaiki)",60,60,PASS
+C. 5 perbaikan yang salah (OK + NG tidak sama dengan input): dimuat,0,0,PASS
+C. 5 perbaikan yang salah: ditolak lagi,5,5,PASS
+C. Isi production_log tidak berubah oleh perbaikan yang salah,8892f1812ac36cd32525eb884a6fcf12,8892f1812ac36cd32525eb884a6fcf12,PASS
+C. Perbaikan benar: baris dimuat ulang,240,240,PASS
+C. Perbaikan benar: baris masih ditolak,0,0,PASS
+C. Baris production_log sesudah muat ulang,7200,7200,PASS
+C. 6.960 baris yang sudah ada tidak berubah (checksum),8892f1812ac36cd32525eb884a6fcf12,8892f1812ac36cd32525eb884a6fcf12,PASS
+C. rejected_rows.fixed_at terisi untuk baris yang diperbaiki,240,240,PASS
+C. Baris karantina yang tidak diperbaiki (salinan ganda) tetap tanpa fixed_at,60,60,PASS
+C. Setelah muat ulang: baris production_log yang sama persis dengan data bersih asal,7200,7200,PASS
+C. Setelah muat ulang: baris tanpa pasangan di data bersih asal,0,0,PASS

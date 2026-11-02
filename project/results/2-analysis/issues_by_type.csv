@@ -1,0 +1,7 @@
+kode,jenis,perlakuan,baris,pct_baris
+R04,OK + NG tidak sama dengan input,Dikarantina,180,0.024793
+R01,Kolom wajib kosong atau tidak terbaca,Dikarantina,60,0.008264
+R03,Jumlah negatif,Dikarantina,60,0.008264
+R05,"Baris ganda (kunci tanggal, stasiun, model, shift)",Dikarantina,60,0.008264
+model_dinormalkan,Penulisan model tidak seragam,"Diperbaiki format, dimuat",60,0.008264
+satuan_angka_dibuang,Angka bersatuan teks (mis. 480 pcs),"Diperbaiki format, dimuat",60,0.008264
